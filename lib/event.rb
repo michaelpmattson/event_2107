@@ -55,4 +55,27 @@ class Event
     end
     too_much
   end
+
+  def sell(item, quantity)
+    if quantity > total_inventory[item][:quantity]
+      false
+    else
+      reduce_stock(item, quantity)
+      true
+    end
+  end
+
+  def reduce_stock(item, quantity)
+    @food_trucks.each do |food_truck|
+      if food_truck.inventory[item] > 0
+        if food_truck.inventory[item] > quantity
+          food_truck.inventory[item] -= quantity
+        else
+          sold = food_truck.inventory[item]
+          quantity -= sold
+          food_truck.inventory.delete(item)
+        end
+      end
+    end
+  end
 end
